@@ -19,20 +19,32 @@ app.post('/download', async (req, res) => {
 
   try {
     const page = await browser.newPage();
-    await page.goto('https://ssstik.io/en', { waitUntil: 'networkidle2' });
-    await page.type('#main_page_text', url);
+    await page.goto('https://snaptik.app', { waitUntil: 'networkidle2' });
+
+    // Type the TikTok URL
+    await page.type('input[name="url"]', url);
+
+    // Click the download button
     await page.click('button[type="submit"]');
-    await page.waitForSelector('.result_overlay_btns a', { timeout: 30000 });
-    const downloadLink = await page.$eval('.result_overlay_btns a', el => el.href);
+    await page.waitForTimeout(3000); // wait for server to process
+
+    // Wait for the download links to appear
+    await page.waitForSelector('.download-links a', { timeout: 30000 });
+
+    // Get the first download link
+    const downloadLink = await page.$eval('.download-links a', el => el.href);
 
     await browser.close();
     return res.json({ download_url: downloadLink });
   } catch (err) {
     await browser.close();
-    return res.status(500).json({ error: 'Download failed', details: err.message });
+    return res.status(500).json({
+      error: 'Download failed',
+      details: err.message
+    });
   }
 });
 
 app.listen(3000, () => {
-  console.log('✅ TikTok Downloader running on port 3000');
+  console.log('✅ TikTok Downloader (SnapTik) running on port 3000');
 });
