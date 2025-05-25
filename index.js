@@ -19,17 +19,21 @@ app.post('/download', async (req, res) => {
 
   try {
     const page = await browser.newPage();
-    await page.goto('https://snaptik.app', { waitUntil: 'networkidle2' });
+    await page.goto('https://tiktokdownload.online/', { waitUntil: 'networkidle2' });
 
-    await page.type('input[name="url"]', url);
+    // Type the TikTok URL into the form
+    await page.type('#url', url);
     await page.click('button[type="submit"]');
-    await page.waitForTimeout(3000);
-    await page.waitForSelector('.download-links a', { timeout: 30000 });
 
-    const downloadLink = await page.$eval('.download-links a', el => el.href);
+    // Wait for the download link to appear
+    await page.waitForSelector('a.download_link.without_watermark', { timeout: 30000 });
+
+    // Extract the download URL
+    const downloadLink = await page.$eval('a.download_link.without_watermark', el => el.href);
 
     await browser.close();
     return res.json({ download_url: downloadLink });
+
   } catch (err) {
     await browser.close();
     return res.status(500).json({
@@ -40,6 +44,5 @@ app.post('/download', async (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('✅ TikTok Downloader (SnapTik) running on port 3000');
+  console.log('✅ TikTok Downloader (TikTokDownload.online) running on port 3000');
 });
-// trigger redeploy
