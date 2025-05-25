@@ -21,17 +21,11 @@ app.post('/download', async (req, res) => {
     const page = await browser.newPage();
     await page.goto('https://snaptik.app', { waitUntil: 'networkidle2' });
 
-    // Type the TikTok URL
     await page.type('input[name="url"]', url);
-
-    // Click the download button
     await page.click('button[type="submit"]');
-    await page.waitForTimeout(3000); // wait for server to process
-
-    // Wait for the download links to appear
+    await page.waitForTimeout(3000);
     await page.waitForSelector('.download-links a', { timeout: 30000 });
 
-    // Get the first download link
     const downloadLink = await page.$eval('.download-links a', el => el.href);
 
     await browser.close();
