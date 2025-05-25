@@ -22,7 +22,7 @@ app.post('/download', async (req, res) => {
     await page.goto('https://ssstik.io/en', { waitUntil: 'networkidle2' });
     await page.type('#main_page_text', url);
     await page.click('button[type="submit"]');
-    await page.waitForSelector('.result_overlay_btns a', { timeout: 15000 });
+    await page.waitForSelector('.result_overlay_btns a', { timeout: 30000 });
     const downloadLink = await page.$eval('.result_overlay_btns a', el => el.href);
 
     await browser.close();
