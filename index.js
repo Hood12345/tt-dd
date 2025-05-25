@@ -1,8 +1,8 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
 const cors = require('cors');
-const app = express();
 
+const app = express();
 app.use(cors());
 app.use(express.json());
 
@@ -14,7 +14,6 @@ app.post('/download', async (req, res) => {
 
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: '/usr/bin/chromium-browser', // use system-installed Chromium
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
@@ -25,7 +24,6 @@ app.post('/download', async (req, res) => {
     await page.type('#url', url);
     await page.click('button[type="submit"]');
 
-    // Wait for the download link to appear
     await page.waitForSelector('a.download_link.without_watermark', { timeout: 30000 });
 
     const downloadLink = await page.$eval('a.download_link.without_watermark', el => el.href);
@@ -43,5 +41,5 @@ app.post('/download', async (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('✅ TikTok Downloader (TikTokDownload.online with system Chromium) running on port 3000');
+  console.log('✅ TikTok Downloader running on port 3000');
 });
