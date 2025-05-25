@@ -19,13 +19,12 @@ app.post('/download', async (req, res) => {
 
   try {
     const page = await browser.newPage();
-    await page.goto('https://tiktokdownload.online/', { waitUntil: 'networkidle2' });
+    await page.goto('https://tiktokdownload.online', { waitUntil: 'networkidle2' });
 
-    await page.type('#url', url);
-    await page.click('button[type="submit"]');
+    await page.type('#main_page_text', url);            // ✅ input selector
+    await page.click('#submit');                        // ✅ submit button
 
     await page.waitForSelector('a.download_link.without_watermark', { timeout: 30000 });
-
     const downloadLink = await page.$eval('a.download_link.without_watermark', el => el.href);
 
     await browser.close();
