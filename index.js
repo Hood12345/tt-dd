@@ -42,3 +42,4 @@ app.post('/download', async (req, res) => {
 app.listen(3000, () => {
   console.log('✅ TikTok Downloader (SnapTik) running on port 3000');
 });
+// trigger redeploy
